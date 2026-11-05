@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { @apply bg-white font-sans text-ink antialiased; font-size: 16.5px; line-height: 1.65; }
+  h1, h2, h3 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+  :focus-visible { outline: 2px solid #1A56A6; outline-offset: 3px; border-radius: 2px; }
+  ::selection { background: #9CC3EE; color: #06172C; }
+}
+
+@layer components {
+  .eyebrow { @apply text-[13px] font-semibold text-blue; }
+  .link-arrow { @apply inline-flex items-center gap-2 font-semibold text-blue transition-colors hover:text-navy; }
+  .link-arrow svg { @apply transition-transform duration-300 ease-refined; }
+  .link-arrow:hover svg { transform: translateX(3px); }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-[3px] px-6 py-3 text-[15px] font-semibold transition-colors duration-200; }
+  .btn-primary { @apply btn bg-blue text-white hover:bg-blue-700; }
+  .btn-light { @apply btn bg-white text-navy hover:bg-mist; }
+  .btn-outline-light { @apply btn border border-white/40 text-white hover:border-white hover:bg-white/5; }
+  .btn-outline { @apply btn border border-navy/25 text-navy hover:border-navy; }
+  .rule { @apply h-px w-full bg-silver-300; }
+}
