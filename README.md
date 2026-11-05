@@ -102,6 +102,16 @@ To go live: set `MARKET_DATA_PROVIDER=licensed` and the `MARKET_DATA_*` variable
 - [ ] Rate limiting backed by a shared store (e.g. Redis) when running more than one instance
 - [ ] Lighthouse and accessibility audit on the deployed environment
 
+## Deploy to GitHub Pages
+
+GitHub Pages only serves static files, so it can't run `npm start`. The included workflow (`.github/workflows/deploy-pages.yml`) builds a static version of the site on every push to `main` and publishes it.
+
+1. Push this project so `package.json` sits at the **root** of the repository.
+2. In the repository go to **Settings → Pages → Build and deployment → Source** and choose **GitHub Actions**.
+3. Push to `main` (or run the workflow from the **Actions** tab). The site appears at `https://<account>.github.io/<repo>/` after a minute or two.
+
+The Pages build differs from the server build in three ways: the `/api` routes are left out (Pages has no server), the market ticker runs in DEMO mode in the browser, and a banner notes that the site is a redesign concept. For a live market feed, deploy the server build to Vercel or any Node.js host.
+
 ## Push to GitHub
 
 ```bash

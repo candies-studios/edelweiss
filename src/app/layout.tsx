@@ -47,6 +47,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
       </head>
       <body>
+        {process.env.NEXT_PUBLIC_CONCEPT_BANNER === "true" && (
+          <p className="bg-navy-900 px-4 py-1.5 text-center text-[12px] text-silver">
+            Redesign concept for review. This is not the official Edelweiss website — visit{" "}
+            <a href="https://www.edelweissfin.com" className="text-white underline">edelweissfin.com</a>.
+          </p>
+        )}
         <Header />
         <main id="main">{children}</main>
         <Footer />

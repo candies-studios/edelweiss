@@ -2,7 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { IndexQuote, MarketSnapshot } from "@/lib/market/types";
-import { formatIST } from "@/lib/market/calendar";
+import { calendarStatus, formatIST } from "@/lib/market/calendar";
+import { demoProvider } from "@/lib/market/providers/demo";
+import { DISPLAY_INDICES } from "@/lib/market/indices";
+
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const STATIC = process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
 
 const nf = new Intl.NumberFormat("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -56,9 +61,20 @@ export function MarketTicker() {
       setTimeout(() => setFlash({}), 900);
     };
 
+    // Static hosting (GitHub Pages) has no server: generate DEMO snapshots in the browser.
+    if (STATIC) {
+      const tick = async () => {
+        const quotes = await demoProvider.getQuotes(DISPLAY_INDICES);
+        apply({ quotes, status: calendarStatus(), mode: "demo", generatedAt: new Date().toISOString(), stale: false });
+      };
+      tick();
+      poll = setInterval(tick, 3000);
+      return () => clearInterval(poll);
+    }
+
     const startPolling = () => {
       const load = () =>
-        fetch("/api/market", { cache: "no-store" })
+        fetch(`${BASE}/api/market`, { cache: "no-store" })
           .then((r) => (r.ok ? r.json() : Promise.reject()))
           .then(apply)
           .catch(() => setFailed(true));
@@ -67,7 +83,7 @@ export function MarketTicker() {
     };
 
     if ("EventSource" in window) {
-      es = new EventSource("/api/market/stream");
+      es = new EventSource(`${BASE}/api/market/stream`);
       es.onmessage = (e) => apply(JSON.parse(e.data));
       es.onerror = () => {
         // Browser retries automatically; fall back to polling if the stream keeps failing.
